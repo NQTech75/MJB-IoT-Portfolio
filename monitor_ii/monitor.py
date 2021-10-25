@@ -27,10 +27,7 @@ def cpu_load_log():
     prints to screen every 5 seconds for a total of 12 times
     logs the results to a database file
     """
-    engine = create_engine(f'sqlite:///{_db_filename}')
-    Base.metadata.create_all(engine)
-    my_session = sessionmaker(bind=engine)()
-    cpu_record = CPU()
+
     count = 0
     run = True
 
