@@ -35,6 +35,11 @@ def cpu_load_log():
     run = True
 
     while run:
+        engine = create_engine(f'sqlite:///{_db_filename}')
+        Base.metadata.create_all(engine)
+        my_session = sessionmaker(bind=engine)()
+        cpu_record = CPU()
+
         cpu_usage = psutil.cpu_percent()
         cpu_date = datetime.now()
 

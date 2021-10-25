@@ -7,9 +7,7 @@ Description:
 Creates profile for data to database for CPU
 
 """
-import os
 from sqlalchemy import Column, DateTime, Float, func, Integer
-from sqlalchemy.ext.declarative import declarative_base
 
 from my_db import Base
 
