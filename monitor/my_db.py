@@ -14,7 +14,7 @@ from sqlalchemy import Column, DateTime, Float, func, Integer, String
 from datetime import datetime
 
 db_folder = "./data/"
-db_filename = "monitoring_cpu.db"
+db_filename = "monitoring_enviro.db"
 
 if not os.path.isdir(db_folder):
     os.makedirs(db_folder)
