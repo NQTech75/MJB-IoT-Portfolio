@@ -7,9 +7,14 @@ Description:
 Monitor API
 
 """
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 import psutil
 from flask import Flask, render_template
+from my_db import Base, db_folder, db_filename, EnvironmentTPH
+import json
 
+_db_filename = db_folder + db_filename
 my_app = Flask(__name__)
 
 
@@ -21,27 +26,58 @@ def index():
 @my_app.route('/api/device-load')
 def handle_form():
     cpu_load = psutil.cpu_percent()
-    return {'CPU Load': cpu_load}
+    return {'CPULoad': cpu_load}
 
 
-@my_app.route("/api/environment")
-def get_api_environment():
-    return {"temperature": None, "pressure": None, "humidity": None}
+@my_app.route("/api/environment/<quantity>")
+def get_api_environment(quantity):
+    engine = create_engine(f'sqlite:///{_db_filename}')
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    enviro_record = session.query(EnvironmentTPH).limit(quantity)
+    result = []
+    for record in enviro_record:
+        temperature = record.temperature
+        pressure = record.pressure
+        humidity = record.humidity
+        environment = {"temperature": temperature, "pressure": pressure, "humidity": humidity}
+        result.append(environment)
+
+    json_result = json.dumps({"environment": result})
+    return json_result
 
 
 @my_app.route("/api/temperature")
 def get_api_temperature():
-    return {"temperature": None}
+    engine = create_engine(f'sqlite:///{_db_filename}')
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    enviro_record = session.query(EnvironmentTPH).limit(1)
+    for record in enviro_record:
+        temperature = record.temperature
+        return {"temperature": temperature}
 
 
 @my_app.route("/api/pressure")
 def get_api_pressure():
-    return {"pressure": None}
+    engine = create_engine(f'sqlite:///{_db_filename}')
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    enviro_record = session.query(EnvironmentTPH).limit(1)
+    for record in enviro_record:
+        pressure = record.pressure
+        return {"pressure": pressure}
 
 
 @my_app.route("/api/humidity")
 def get_api_humidity():
-    return {"humidity": None}
+    engine = create_engine(f'sqlite:///{_db_filename}')
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    enviro_record = session.query(EnvironmentTPH).limit(1)
+    for record in enviro_record:
+        humidity = record.humidity
+        return {"humidity": humidity}
 
 
 @my_app.route("/api/does-not-exist")

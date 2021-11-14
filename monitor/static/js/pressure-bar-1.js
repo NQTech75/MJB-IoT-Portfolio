@@ -1,17 +1,17 @@
 // get html canvas
-var barChartCanvasHumidity = document.getElementById('Humidity-Bar')
+var barChartCanvasPressure = document.getElementById('Pressure-Bar')
 // set data for graph
 var barData = {
     labels: ['Current'],
     datasets: [{
-        label: 'Humidity',
-        data: [62],
+        label: 'Pressure',
+        data: [1012.3],
         borderWidth: 1,
         backgroundColor: [
-            'rgba(249, 194, 46, 0.5)',
+            'rgba(157, 105, 163, 0.5)',
         ],
         borderColor: [
-            'rgba(249, 194, 46, 1)',
+            'rgba(157, 105, 163, 1)',
         ],
     }],
 }
@@ -27,7 +27,7 @@ var barOptions = {
 }
 
 // create new graph
-var myChartHumidity = new Chart(barChartCanvasHumidity, {
+var myChartPressure = new Chart(barChartCanvasPressure, {
     type: 'bar',
     data: barData,
     options: barOptions,
@@ -35,17 +35,16 @@ var myChartHumidity = new Chart(barChartCanvasHumidity, {
 
 
 // function to update data for graph
-async function updateHumidity() {
-    let temps = await getHumidity();
-    temps.forEach(temp=> {
-        myChartHumidity.data.datasets[0].data = temp.humidity
-    myChartHumidity.update()
-    });
+async function updatePressure() {
+    let temps = await getPressure();
+    myChartPressure.data.datasets[0].data = [temps.pressure]
+    myChartPressure.update()
+   
 }
 
 // get the data from api
-async function getHumidity(){
-    let link = 'http://127.0.0.1:5000/api/humidity';
+async function getPressure(){
+    let link = 'http://127.0.0.1:5000/api/pressure';
     try {
         let result = await fetch(link);
         return await result.json();
@@ -55,4 +54,4 @@ async function getHumidity(){
 }
 
 // run the update function
-updateHumidity()
+updatePressure()

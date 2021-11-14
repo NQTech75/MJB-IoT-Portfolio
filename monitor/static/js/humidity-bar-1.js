@@ -37,10 +37,9 @@ var myChartHumidity = new Chart(barChartCanvasHumidity, {
 // function to update data for graph
 async function updateHumidity() {
     let temps = await getHumidity();
-    temps.forEach(temp=> {
-        myChartHumidity.data.datasets[0].data = temp.humidity
+    myChartHumidity.data.datasets[0].data = [temps.humidity]
     myChartHumidity.update()
-    });
+
 }
 
 // get the data from api

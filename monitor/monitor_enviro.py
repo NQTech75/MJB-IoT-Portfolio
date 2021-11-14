@@ -15,7 +15,7 @@ from time import sleep
 from cpu import CPU
 from my_db import Base, EnvironmentTPH, db_folder, db_filename
 from mypi import get_host_name, get_mac, get_serial
-
+from sense_hat import SenseHat
 
 # set db location
 _db_filename = db_folder + db_filename

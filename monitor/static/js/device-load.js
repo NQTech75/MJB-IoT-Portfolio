@@ -31,11 +31,11 @@ var myPieChartCPULoad = new Chart(pieChartCanvasCPULoad, {
 // function to update data for graph
 async function updateCPULoad() {
     let temps = await getCPULoad();
-    temps.forEach(temp=> {
-        myChartCPULoad.data.datasets[0].data = temp.CPULoad
-         myChartCPULoad.data.datasets[1].data = 100 - temp.CPULoad
+    // set idle 100% - current load
+    var idle = 100 - temps.CPULoad;
+    myPieChartCPULoad.data.datasets[0].data = [temps.CPULoad,idle]
     myPieChartCPULoad.update()
-    });
+
 }
 
 // get the data from api
