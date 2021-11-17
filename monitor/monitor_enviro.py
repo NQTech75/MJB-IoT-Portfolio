@@ -15,7 +15,7 @@ from time import sleep
 from cpu import CPU
 from my_db import Base, EnvironmentTPH, db_folder, db_filename
 from mypi import get_host_name, get_mac, get_serial
-from sense_hat import SenseHat
+
 
 # set db location
 _db_filename = db_folder + db_filename
@@ -49,9 +49,9 @@ def environment_log():
         my_session.commit()
 
         print(f" {environment_record.device_name}| {environment_record.created_at} ")
-        sleep(5)
+        sleep(30)
         count += 1
-        if count < 12:
+        if count < 30:
             run = True
         else:
             run = False
