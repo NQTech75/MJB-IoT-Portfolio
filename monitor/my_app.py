@@ -31,7 +31,7 @@ def handle_form():
 
 @my_app.route("/api/environment/<quantity>")
 def get_api_environment(quantity):
-    engine = create_engine(f'sqlite:///{_db_filename}')
+    engine = create_engine(f'sqlite:///{_db_filename}', connect_args={'check_same_thread': False})
     Base.metadata.create_all(engine)
     session = sessionmaker(bind=engine)()
     enviro_record = session.query(EnvironmentTPH).limit(quantity)
@@ -40,16 +40,17 @@ def get_api_environment(quantity):
         temperature = record.temperature
         pressure = record.pressure
         humidity = record.humidity
-        environment = {"temperature": temperature, "pressure": pressure, "humidity": humidity}
+        created = record.created_at
+        environment = {"temperature": temperature, "pressure": pressure, "humidity": humidity, "created_at": created}
         result.append(environment)
 
-    json_result = json.dumps({"environment": result})
+    json_result = json.dumps({"environment": result}, default=str)
     return json_result
 
 
 @my_app.route("/api/temperature")
 def get_api_temperature():
-    engine = create_engine(f'sqlite:///{_db_filename}')
+    engine = create_engine(f'sqlite:///{_db_filename}', connect_args={'check_same_thread': False})
     Base.metadata.create_all(engine)
     session = sessionmaker(bind=engine)()
     enviro_record = session.query(EnvironmentTPH).limit(1)
@@ -60,7 +61,7 @@ def get_api_temperature():
 
 @my_app.route("/api/pressure")
 def get_api_pressure():
-    engine = create_engine(f'sqlite:///{_db_filename}')
+    engine = create_engine(f'sqlite:///{_db_filename}',connect_args={'check_same_thread': False})
     Base.metadata.create_all(engine)
     session = sessionmaker(bind=engine)()
     enviro_record = session.query(EnvironmentTPH).limit(1)
@@ -69,9 +70,26 @@ def get_api_pressure():
         return {"pressure": pressure}
 
 
+@my_app.route("/api/pressure/<quantity>")
+def get_api_pressure_qty(quantity):
+    engine = create_engine(f'sqlite:///{_db_filename}',connect_args={'check_same_thread': False})
+    Base.metadata.create_all(engine)
+    session = sessionmaker(bind=engine)()
+    enviro_record = session.query(EnvironmentTPH).limit(quantity)
+    result = []
+    for record in enviro_record:
+        pressure = record.pressure
+        created = record.created_at
+        environment = {"pressure": pressure, "created_at": created}
+        result.append(environment)
+
+    json_result = json.dumps({"pressures": result}, default=str)
+    return json_result
+
+
 @my_app.route("/api/humidity")
 def get_api_humidity():
-    engine = create_engine(f'sqlite:///{_db_filename}')
+    engine = create_engine(f'sqlite:///{_db_filename}',connect_args={'check_same_thread': False})
     Base.metadata.create_all(engine)
     session = sessionmaker(bind=engine)()
     enviro_record = session.query(EnvironmentTPH).limit(1)
